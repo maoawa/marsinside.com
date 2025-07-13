@@ -5,6 +5,13 @@
   --radius-medium: 12px;
   --radius-large: 16px;
   --radius-full: 999px;
+  --font-sans-serif: Inter, sans-serif, system-ui;
+  --font-sans-serif-feature-settings: "liga" 1, "calt" 1; /* fix for Chrome */
+}
+@supports (font-variation-settings: normal) {
+  :root {
+    --font-sans-serif: InterVariable, sans-serif, system-ui;
+  }
 }
 
 body[data-color-scheme=auto],
@@ -13,6 +20,7 @@ body[data-color-scheme=light] {
   --color-background-primary: #fbfbfd;
   --color-background-primary-hover: #ffffff;
   --color-background-primary-active: #fdfdfd;
+  --color-background-primary-translucent: #fbfbfd33;
   --color-background-secondary: #ffffff;
   --color-background-secondary-hover: #f7f7f7;
   --color-background-secondary-translucent: #ffffffcc;
@@ -37,6 +45,7 @@ body[data-color-scheme=light] {
     --color-background-primary: #101010;
     --color-background-primary-hover: #181818;
     --color-background-primary-active: #141414;
+    --color-background-primary-translucent: #10101033;
     --color-background-secondary: #181818;
     --color-background-secondary-hover: #202020;
     --color-background-secondary-translucent: #00000080;
@@ -60,6 +69,7 @@ body[data-color-scheme=dark] {
   --color-background-primary: #101010;
   --color-background-primary-hover: #181818;
   --color-background-primary-active: #141414;
+  --color-background-primary-translucent: #10101033;
   --color-background-secondary: #181818;
   --color-background-secondary-hover: #202020;
   --color-background-secondary-translucent: #00000080;

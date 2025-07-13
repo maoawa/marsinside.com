@@ -2,8 +2,8 @@
   var navEl = document.getElementById('theme-nav')
   navEl.addEventListener('click', e => {
     if (window.innerWidth <= 600) {
-      if (!navEl.classList.contains('open')) {
-        navEl.style.setProperty(
+      if (!document.body.classList.contains('nav-open')) {
+        document.body.style.setProperty(
           '--open-height',
           48 +
             document.querySelector('#theme-nav .nav-items').clientHeight +
@@ -11,16 +11,16 @@
         )
       }
 
-      navEl.classList.toggle('open')
+      document.body.classList.toggle('nav-open')
     } else {
-      navEl.style.removeProperty('--open-height')
-      navEl.classList.remove('open')
+      document.body.style.removeProperty('--open-height')
+      document.body.classList.remove('nav-open')
     }
   })
 
   window.addEventListener('resize', () => {
-    if (navEl.classList.contains('open')) {
-      navEl.style.setProperty(
+    if (document.body.classList.contains('nav-open')) {
+      document.body.style.setProperty(
         '--open-height',
         48 +
           document.querySelector('#theme-nav .nav-items').clientHeight +
@@ -28,83 +28,24 @@
       )
     }
     if (window.innerWidth > 600) {
-      navEl.style.removeProperty('--open-height')
-      navEl.classList.remove('open')
+      document.body.style.removeProperty('--open-height')
+      document.body.classList.remove('nav-open')
     }
   })
 
-  // a simple solution for managing cookies
-  const Cookies = new (class {
-    get(key, fallback) {
-      const temp = document.cookie
-        .split('; ')
-        .find(row => row.startsWith(key + '='))
-      if (temp) {
-        return temp.split('=')[1]
-      } else {
-        return fallback
-      }
-    }
-    set(key, value) {
-      document.cookie =
-        key +
-        '=' +
-        value +
-        '; path=' +
-        document.body.getAttribute('data-config-root')
-    }
-  })()
-
-  const ColorScheme = new (class {
-    constructor() {
-      window
-        .matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener('change', () => {
-          this.updateCurrent(Cookies.get('color-scheme', 'auto'))
-        })
-    }
-    get() {
-      const stored = Cookies.get('color-scheme', 'auto')
-      this.updateCurrent(stored)
-      return stored
-    }
-    set(value) {
-      bodyEl.setAttribute('data-color-scheme', value)
-      Cookies.set('color-scheme', value)
-      this.updateCurrent(value)
-      return value
-    }
-    updateCurrent(value) {
-      var current = 'light'
-      if (value == 'auto') {
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          current = 'dark'
-        }
-      } else {
-        current = value
-      }
-      document.body.setAttribute('data-current-color-scheme', current)
-    }
-  })()
-
   if (document.getElementById('theme-color-scheme-toggle')) {
-    var bodyEl = document.body
     var themeColorSchemeToggleEl = document.getElementById(
       'theme-color-scheme-toggle',
     )
     var options = themeColorSchemeToggleEl.getElementsByTagName('input')
 
-    if (ColorScheme.get()) {
-      bodyEl.setAttribute('data-color-scheme', ColorScheme.get())
-    }
-
     for (const option of options) {
-      if (option.value == bodyEl.getAttribute('data-color-scheme')) {
+      if (option.value == document.body.dataset.colorScheme) {
         option.checked = true
       }
       option.addEventListener('change', ev => {
         var value = ev.target.value
-        ColorScheme.set(value)
+        ThemeCupertino.ColorScheme.set(value)
         for (const o of options) {
           if (o.value != value) {
             o.checked = false
@@ -184,5 +125,15 @@
         .getElementsByClassName('meta')[0]
         .after(tocContainer)
     }
+  }
+
+  const heroEl = document.querySelector('.hero.exit-while-scroll')
+  if (heroEl) {
+    const updateHeroHeight = () => {
+      heroEl.style.setProperty('--current-hero-height', heroEl.clientHeight)
+    }
+
+    updateHeroHeight()
+    window.addEventListener('resize', updateHeroHeight)
   }
 })()
